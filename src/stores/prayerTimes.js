@@ -8,6 +8,7 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
   // Prayer times data
   const prayerTimes = ref({
     Fajr: "",
+    Sunrise: "",
     Dhuhr: "",
     Asr: "",
     Maghrib: "",
@@ -15,14 +16,22 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
   });
 
  
-  const setPrayerTimes = () => {
-    prayerTimes.value = {
-      Fajr: "6:00 AM",
-      Dhuhr: "12:00 PM",
-      Asr: "3:00 PM",
-      Maghrib: "6:00 PM",
-      Isha: "8:00 PM"
-    };
+  const setPrayerTimes = async () => {
+    try {
+      const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${date.value}?city=Youssoufia&country=Morocco`);
+      const data = await response.json();
+      // Only update prayerTimes with the timings part of the response
+      prayerTimes.value = {
+        Fajr: data.data.timings.Fajr,
+        Sunrise: data.data.timings.Sunrise,
+        Dhuhr: data.data.timings.Dhuhr,
+        Asr: data.data.timings.Asr,
+        Maghrib: data.data.timings.Maghrib,
+        Isha: data.data.timings.Isha
+      };
+    } catch (error) {
+      console.error('Error fetching prayer times:', error);
+    }
   };
 
   return { date, prayerTimes, setPrayerTimes };
