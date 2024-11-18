@@ -5,6 +5,12 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
   // Current date
   const date = ref(new Date().toISOString().split('T')[0]);
 
+  // City name
+  const city = ref('Smara');
+
+  // Country name
+  const country = ref('Morocco');
+
   // Prayer times data
   const prayerTimes = ref({
     Fajr: "",
@@ -18,7 +24,7 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
  
   const setPrayerTimes = async () => {
     try {
-      const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${date.value}?city=Youssoufia&country=Morocco`);
+      const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${date.value}?country=${country.value}&city=${city.value}`);
       const data = await response.json();
       // Only update prayerTimes with the timings part of the response
       prayerTimes.value = {
@@ -34,5 +40,5 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
     }
   };
 
-  return { date, prayerTimes, setPrayerTimes };
+  return { date, prayerTimes, city, country, setPrayerTimes };
 });

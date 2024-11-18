@@ -1,6 +1,6 @@
 <template>
     <div class="prayer-time-container">
-      <h2 class="title">Prayer Times for Youssoufia</h2>
+      <h2 class="title">Prayer Times for {{ prayerStore.city }}/{{ prayerStore.country }}</h2>
       <p class="date">{{ prayerStore.date }}</p>
   
       <div class="prayer-times-list">
