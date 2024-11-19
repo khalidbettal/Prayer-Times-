@@ -1,17 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import axios from 'axios';
 
 export const usePrayerTimesStore = defineStore('prayerTimes', () => {
-  // Current date
   const date = ref(new Date().toISOString().split('T')[0]);
-
-  // City name
-  const city = ref('Smara');
-
-  // Country name
-  const country = ref('Morocco');
-
-  // Prayer times data
+  const city = ref("");
+  const country = ref("");
   const prayerTimes = ref({
     Fajr: "",
     Sunrise: "",
@@ -20,39 +14,54 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
     Maghrib: "",
     Isha: ""
   });
-
   const isLoading = ref(false);
+  const error = ref(null);
 
-  // Helper function to convert 24-hour time to 12-hour format with AM/PM
-  const convertTo12HourFormat = (time24) => {
+  // Helper function to format time to 12-hour format with AM/PM
+  const formatTo12Hour = (time24) => {
     const [hours, minutes] = time24.split(':').map(Number);
     const suffix = hours >= 12 ? 'PM' : 'AM';
-    const hours12 = hours % 12 || 12; // Convert 0 or 12 to 12
-    return `${hours12}:${minutes < 10 ? '0' : ''}${minutes} ${suffix}`;
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutes.toString().padStart(2, '0')} ${suffix}`;
   };
 
-  // Set prayer times with converted 12-hour format
+  // Fetch and set prayer times
   const setPrayerTimes = async () => {
     isLoading.value = true;
-    try {
-      const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${date.value}?country=${country.value}&city=${city.value}`);
-      const data = await response.json();
+    error.value = null;
 
-      isLoading.value = false;
-      
-      // Update prayerTimes with the formatted timings
+    try {
+      const { data } = await axios.get('https://api.aladhan.com/v1/timingsByCity', {
+        params: {
+          country: country.value,
+          city: city.value,
+          date: date.value
+        }
+      });
+
+      if (data.code !== 200) {
+        error.value = 'Invalid location';
+        return;
+      }
+
+      // Update prayerTimes with formatted timings
+      const { Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha } = data.data.timings;
       prayerTimes.value = {
-        Fajr: convertTo12HourFormat(data.data.timings.Fajr),
-        Sunrise: convertTo12HourFormat(data.data.timings.Sunrise),
-        Dhuhr: convertTo12HourFormat(data.data.timings.Dhuhr),
-        Asr: convertTo12HourFormat(data.data.timings.Asr),
-        Maghrib: convertTo12HourFormat(data.data.timings.Maghrib),
-        Isha: convertTo12HourFormat(data.data.timings.Isha)
+        Fajr: formatTo12Hour(Fajr),
+        Sunrise: formatTo12Hour(Sunrise),
+        Dhuhr: formatTo12Hour(Dhuhr),
+        Asr: formatTo12Hour(Asr),
+        Maghrib: formatTo12Hour(Maghrib),
+        Isha: formatTo12Hour(Isha)
       };
-    } catch (error) {
-      console.error('Error fetching prayer times:', error);
+
+    } catch (err) {
+      console.error(err);
+      error.value = 'Unable to fetch prayer times';
+    } finally {
+      isLoading.value = false;
     }
   };
 
-  return { date, prayerTimes, city, country, isLoading, setPrayerTimes };
+  return { date, prayerTimes, city, country, isLoading, error, setPrayerTimes };
 });

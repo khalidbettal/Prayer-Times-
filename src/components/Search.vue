@@ -12,13 +12,6 @@
 />
 
 
-<input 
-  id="country" 
-  v-model="localCountry" 
-  type="text" 
-  class="p-3 mb-4 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" 
-  placeholder="Enter country name"
-/>
 
   </div>
 
@@ -33,12 +26,10 @@ import { usePrayerTimesStore } from '../stores/prayerTimes';
 
    const prayerStore = usePrayerTimesStore();
 
-   const localCity = ref("Yangon");
-   const localCountry = ref("Myanmar");
+   const localCity = ref("");
 
    const updatePrayerTime = () => {
       prayerStore.city = localCity.value;
-      prayerStore.country = localCountry.value;
       prayerStore.setPrayerTimes();
    }
 </script>

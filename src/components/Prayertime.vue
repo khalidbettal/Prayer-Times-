@@ -1,9 +1,9 @@
 <template>
   <div class="prayer-time-container mb-4 dark:bg-gray-800 dark:border-emerald-400">
-    <h2 class="title dark:text-white">Prayer Times for {{ prayerStore.city }}/{{ prayerStore.country }}</h2>
+    <h2 class="title dark:text-white">Prayer Times for {{ prayerStore.city }}</h2>
     <p class="date dark:text-emerald-300 font-bold ">{{ prayerStore.date }}</p>
 
-    <div class="prayer-times-list" v-show="!prayerStore.isLoading">
+    <div class="prayer-times-list" v-show="!prayerStore.isLoading&& !prayerStore.error">
       <div 
         v-for="(time, prayer) in prayerStore.prayerTimes" 
         :key="prayer" 
@@ -13,21 +13,25 @@
         <span class="prayer-time dark:text-white">{{ time }}</span>
       </div>
     </div>
-    <div class="loading" v-show="prayerStore.isLoading">
-      <p v-show="prayerStore.isLoading">Loading Prayer Times...</p>
+    <div v-show="prayerStore.isLoading" class="text-center">
+      <Spinner  />
     </div>
+    <div class="error text-center text-red-300" v-if="prayerStore.error">XX: {{ prayerStore.error }} </div>
   </div>
 </template>
 
 <script setup>
 import { usePrayerTimesStore } from '../stores/prayerTimes';
 import { onMounted } from 'vue';
+import Spinner from './tools/Spinner.vue';
 
 const prayerStore = usePrayerTimesStore();
 
 onMounted(() => {
   prayerStore.setPrayerTimes();
 });
+
+console.log('error', prayerStore.error);
 </script>
 
 <style >
