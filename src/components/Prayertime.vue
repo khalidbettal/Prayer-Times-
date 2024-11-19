@@ -1,5 +1,5 @@
 <template>
-  <div class="prayer-time-container mb-4 dark:bg-gray-800 dark:border-emerald-400">
+  <div class="prayer-time-container  dark:bg-gray-800 dark:border-emerald-400">
     <h2 class="title dark:text-white">Prayer Times for {{ prayerStore.city }}</h2>
     <p class="date dark:text-emerald-300 font-bold ">{{ prayerStore.date }}</p>
 
@@ -38,7 +38,7 @@ console.log('error', prayerStore.error);
 /* General Container */
 .prayer-time-container {
   max-width: 28rem;
-  margin: 1.5rem auto;
+  margin: 10rem auto;
   padding: 1.5rem;
   background-color: white;
   border-radius: 0.75rem;
