@@ -21,6 +21,8 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
     Isha: ""
   });
 
+  const isLoading = ref(false);
+
   // Helper function to convert 24-hour time to 12-hour format with AM/PM
   const convertTo12HourFormat = (time24) => {
     const [hours, minutes] = time24.split(':').map(Number);
@@ -31,9 +33,12 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
 
   // Set prayer times with converted 12-hour format
   const setPrayerTimes = async () => {
+    isLoading.value = true;
     try {
       const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${date.value}?country=${country.value}&city=${city.value}`);
       const data = await response.json();
+
+      isLoading.value = false;
       
       // Update prayerTimes with the formatted timings
       prayerTimes.value = {
@@ -49,5 +54,5 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
     }
   };
 
-  return { date, prayerTimes, city, country, setPrayerTimes };
+  return { date, prayerTimes, city, country, isLoading, setPrayerTimes };
 });

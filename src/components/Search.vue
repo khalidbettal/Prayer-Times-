@@ -33,8 +33,8 @@ import { usePrayerTimesStore } from '../stores/prayerTimes';
 
    const prayerStore = usePrayerTimesStore();
 
-   const localCity = ref("");
-   const localCountry = ref("");
+   const localCity = ref("Yangon");
+   const localCountry = ref("Myanmar");
 
    const updatePrayerTime = () => {
       prayerStore.city = localCity.value;

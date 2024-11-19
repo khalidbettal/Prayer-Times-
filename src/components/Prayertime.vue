@@ -3,7 +3,7 @@
     <h2 class="title dark:text-white">Prayer Times for {{ prayerStore.city }}/{{ prayerStore.country }}</h2>
     <p class="date dark:text-emerald-300 font-bold ">{{ prayerStore.date }}</p>
 
-    <div class="prayer-times-list">
+    <div class="prayer-times-list" v-show="!prayerStore.isLoading">
       <div 
         v-for="(time, prayer) in prayerStore.prayerTimes" 
         :key="prayer" 
@@ -12,6 +12,9 @@
         <span class="prayer-name dark:text-emerald-400">{{ prayer }}</span>
         <span class="prayer-time dark:text-white">{{ time }}</span>
       </div>
+    </div>
+    <div class="loading" v-show="prayerStore.isLoading">
+      <p v-show="prayerStore.isLoading">Loading Prayer Times...</p>
     </div>
   </div>
 </template>
