@@ -5,7 +5,7 @@
 
 <input 
   id="city" 
-  v-model="prayerStore.city" 
+  v-model="localCity" 
   type="text" 
   class=" p-3 mb-4 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" 
   placeholder="Enter city name"
@@ -14,7 +14,7 @@
 
 <input 
   id="country" 
-  v-model="prayerStore.country" 
+  v-model="localCountry" 
   type="text" 
   class="p-3 mb-4 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" 
   placeholder="Enter country name"
@@ -22,13 +22,23 @@
 
   </div>
 
-  <button class="p-3 mb-4 border-2 rounded-lg bg-green-400" @click="prayerStore.setPrayerTimes">Search</button>
+  <button class="p-3 mb-4 border-2 rounded-lg bg-green-400" @click="updatePrayerTime">Search</button>
   </div>
 
 </template>
 
 <script setup>
-   import { usePrayerTimesStore } from '../stores/prayerTimes';
+   import { ref } from 'vue';
+import { usePrayerTimesStore } from '../stores/prayerTimes';
 
    const prayerStore = usePrayerTimesStore();
+
+   const localCity = ref("");
+   const localCountry = ref("");
+
+   const updatePrayerTime = () => {
+      prayerStore.city = localCity.value;
+      prayerStore.country = localCountry.value;
+      prayerStore.setPrayerTimes();
+   }
 </script>
