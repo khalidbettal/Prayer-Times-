@@ -1,22 +1,36 @@
 <template>
+  
   <div class="prayer-time-container  dark:bg-gray-800 dark:border-emerald-400">
+      <!-- Language switch button -->
+    <button 
+      @click="toggleLanguage" 
+      class="px-4 py-2 rounded bg-emerald-500 text-white mb-4"
+    >
+      Switch to {{ isArabic ? 'English' : 'Arabic' }}
+    </button>
     <h1 class="title dark:text-white">Prayer Times for {{ prayerStore.city }}</h1>
     <h2 class="date dark:text-emerald-300 font-bold ">{{ prayerStore.cityCountry }}</h2>
     <p class="date dark:text-emerald-300 font-bold ">{{ prayerStore.date }}</p>
 
-    <div class="prayer-times-list" v-show="!prayerStore.isLoading&& !prayerStore.error">
+  
+
+    <div class="prayer-times-list" v-show="!prayerStore.isLoading && !prayerStore.error">
       <div 
         v-for="(time, prayer) in prayerStore.prayerTimes" 
         :key="prayer" 
         class="prayer-item dark:bg-gray-700 dark:hover:bg-indigo-900"
       >
-        <span class="prayer-name dark:text-emerald-400">{{ prayer }}</span>
+        <span class="prayer-name dark:text-emerald-400">
+          {{ isArabic ? getArabicPrayerName(prayer) : prayer }}
+        </span>
         <span class="prayer-time dark:text-white">{{ time }}</span>
       </div>
     </div>
+
     <div v-show="prayerStore.isLoading" class="text-center">
-      <Spinner  />
+      <Spinner />
     </div>
+
     <div class="error text-center text-red-300" v-if="prayerStore.error">XX: {{ prayerStore.error }} </div>
   </div>
 </template>
@@ -24,19 +38,37 @@
 
 
 
+
+
 <script setup>
+import { ref, onMounted } from 'vue';
 import { usePrayerTimesStore } from '../stores/prayerTimes';
-import { onMounted } from 'vue';
 import Spinner from './tools/Spinner.vue';
 
 const prayerStore = usePrayerTimesStore();
+const isArabic = ref(false); // State to track language
 
 onMounted(() => {
   prayerStore.setPrayerTimes();
 });
 
-console.log('error', prayerStore.error);
+function toggleLanguage() {
+  isArabic.value = !isArabic.value;
+}
+
+function getArabicPrayerName(englishName) {
+  const arabicNames = {
+    "Fajr": "الفجر",
+    "Dhuhr": "الظهر",
+    "Asr": "العصر",
+    "Maghrib": "المغرب",
+    "Isha": "العشاء"
+  };
+  return arabicNames[englishName] || englishName;
+}
 </script>
+
+
 
 
 

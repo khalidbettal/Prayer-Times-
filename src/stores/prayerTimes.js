@@ -8,7 +8,6 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
   const country = ref("");
   const prayerTimes = ref({
     Fajr: "",
-    Sunrise: "",
     Dhuhr: "",
     Asr: "",
     Maghrib: "",
@@ -49,7 +48,6 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
       const { Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha } = data.data.timings;
       prayerTimes.value = {
         Fajr: formatTo12Hour(Fajr),
-        Sunrise: formatTo12Hour(Sunrise),
         Dhuhr: formatTo12Hour(Dhuhr),
         Asr: formatTo12Hour(Asr),
         Maghrib: formatTo12Hour(Maghrib),
