@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export const usePrayerTimesStore = defineStore('prayerTimes', () => {
   const date = ref(new Date().toISOString().split('T')[0]);
-  const city = ref("");
+  const city = ref("youssoufia");
   const country = ref("");
   const prayerTimes = ref({
     Fajr: "",
@@ -16,6 +16,7 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
   });
   const isLoading = ref(false);
   const error = ref(null);
+  const cityCountry = ref("");
 
   // Helper function to format time to 12-hour format with AM/PM
   const formatTo12Hour = (time24) => {
@@ -55,6 +56,9 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
         Isha: formatTo12Hour(Isha)
       };
 
+      // Update cityCountry
+      cityCountry.value = data.data.meta.method.name
+
     } catch (err) {
       console.error(err);
       error.value = 'Unable to fetch prayer times';
@@ -63,5 +67,5 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
     }
   };
 
-  return { date, prayerTimes, city, country, isLoading, error, setPrayerTimes };
+  return { date, prayerTimes, city, country, isLoading, error, cityCountry, setPrayerTimes };
 });
