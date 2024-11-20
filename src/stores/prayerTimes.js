@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export const usePrayerTimesStore = defineStore('prayerTimes', () => {
   const date = ref(new Date().toISOString().split('T')[0]);
-  const city = ref("youssoufia");
+  const city = ref(localStorage.getItem('city') || "rabat");
   const country = ref("");
   const prayerTimes = ref({
     Fajr: "",
@@ -34,7 +34,7 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
     try {
       const { data } = await axios.get('https://api.aladhan.com/v1/timingsByCity', {
         params: {
-          country: country.value,
+          country: city.value,
           city: city.value,
           date: date.value
         }
@@ -57,11 +57,17 @@ export const usePrayerTimesStore = defineStore('prayerTimes', () => {
       };
 
       // Update cityCountry
-      cityCountry.value = data.data.meta.method.name
+      cityCountry.value = data.data.meta.method.name;
+
+      // new date value 
+      date.value = data.data.date.readable;
 
     } catch (err) {
       console.error(err);
       error.value = 'Unable to fetch prayer times';
+      
+      // romove city from localStorage
+      localStorage.removeItem('city');
     } finally {
       isLoading.value = false;
     }

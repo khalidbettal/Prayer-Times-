@@ -98,13 +98,18 @@ const setSelected = (selectedCity) => {
 // Trigger prayer times search using the cityName, even if it's not found in the API
 const onSearch = () => {
   const city = cityStore.cityName.trim();
-
+  
+  // romove item from local storage
+  localStorage.removeItem('city');
+  
   if (!city) {
     return;
   }
 
   // Set the city in the prayer store and trigger search for prayer times
   prayerStore.city = city;
+  // set item in local storage
+  localStorage.setItem('city', city);
   prayerStore.setPrayerTimes();
 };
 </script>

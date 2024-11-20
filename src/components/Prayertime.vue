@@ -1,6 +1,7 @@
 <template>
   <div class="prayer-time-container  dark:bg-gray-800 dark:border-emerald-400">
-    <h2 class="title dark:text-white">Prayer Times for {{ prayerStore.city }}/{{ prayerStore.cityCountry }}</h2>
+    <h1 class="title dark:text-white">Prayer Times for {{ prayerStore.city }}</h1>
+    <h2 class="date dark:text-emerald-300 font-bold ">{{ prayerStore.cityCountry }}</h2>
     <p class="date dark:text-emerald-300 font-bold ">{{ prayerStore.date }}</p>
 
     <div class="prayer-times-list" v-show="!prayerStore.isLoading&& !prayerStore.error">
@@ -20,6 +21,9 @@
   </div>
 </template>
 
+
+
+
 <script setup>
 import { usePrayerTimesStore } from '../stores/prayerTimes';
 import { onMounted } from 'vue';
@@ -33,6 +37,9 @@ onMounted(() => {
 
 console.log('error', prayerStore.error);
 </script>
+
+
+
 
 <style >
 /* General Container */
